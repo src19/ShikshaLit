@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144521776715",
+    "project_id": "shikshalit-cd606",
+    "storage_bucket": "shikshalit-cd606.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144521776715:android:7663e6cfa25cb2183b87ce",
+        "android_client_info": {
+          "package_name": "com.example.literacy_check"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-LWF3SMDA7okRNLSYUYJv-lgCUM48WWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
