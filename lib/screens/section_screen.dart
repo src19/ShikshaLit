@@ -93,7 +93,10 @@ class _SectionScreenState extends State<SectionScreen> {
               double percentage = _calculateSentenceMatch(displayText, transcribedText);
               sentencePercentages.add(percentage);
             }
-            if (transcribedText.trim().toLowerCase() == displayText.trim().toLowerCase()) {
+            // Normalize for comparison
+            String normalizedTranscribed = _normalizeText(transcribedText);
+            String normalizedDisplay = _normalizeText(displayText);
+            if (normalizedTranscribed == normalizedDisplay) {
               correctCount++;
             }
           }
@@ -110,10 +113,20 @@ class _SectionScreenState extends State<SectionScreen> {
     }
   }
 
+  String _normalizeText(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^\w\s]'), '') // Remove punctuation
+        .replaceAll(RegExp(r'\s+'), ' ') // Normalize spaces
+        .trim(); // Remove leading/trailing spaces
+  }
+
   double _calculateSentenceMatch(String expected, String actual) {
-    int maxLength = expected.length > actual.length ? expected.length : actual.length;
+    String normExpected = _normalizeText(expected);
+    String normActual = _normalizeText(actual);
+    int maxLength = normExpected.length > normActual.length ? normExpected.length : normActual.length;
     if (maxLength == 0) return 100.0;
-    int distance = _levenshteinDistance(expected.toLowerCase(), actual.toLowerCase());
+    int distance = _levenshteinDistance(normExpected, normActual);
     double similarity = (1 - distance / maxLength) * 100;
     return similarity.clamp(0.0, 100.0);
   }
@@ -159,25 +172,22 @@ class _SectionScreenState extends State<SectionScreen> {
     Navigator.pop(context);
   }
 
+  Future<bool> _onWillPop() async => false;
+
   @override
   void dispose() {
     _recorder.closeRecorder();
     super.dispose();
   }
 
-  // Disable back button
-  Future<bool> _onWillPop() async {
-    return false; // Prevents popping back to HomeScreen
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop, // Intercept back button
+      onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: Text('${widget.section.capitalize()} Test'),
-          automaticallyImplyLeading: false, // Remove back arrow
+          automaticallyImplyLeading: false,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -203,12 +213,12 @@ class _SectionScreenState extends State<SectionScreen> {
               SizedBox(height: 20),
               if (transcribedText.isNotEmpty) ...[
                 Text(
-                  transcribedText.trim().toLowerCase() == displayText.trim().toLowerCase()
+                  _normalizeText(transcribedText) == _normalizeText(displayText)
                       ? 'Correct!'
                       : 'Incorrect',
                   style: TextStyle(
                     fontSize: 18,
-                    color: transcribedText.trim().toLowerCase() == displayText.trim().toLowerCase()
+                    color: _normalizeText(transcribedText) == _normalizeText(displayText)
                         ? Colors.green
                         : Colors.red,
                   ),
