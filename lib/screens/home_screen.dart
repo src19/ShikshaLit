@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:literacy_check/screens/error_finding_screen.dart';
 import 'package:literacy_check/screens/paragraph_reading_screen.dart';
-import 'package:literacy_check/screens/rhyming_words_screen.dart'; // Import the new screen
+import 'package:literacy_check/screens/rhyming_words_screen.dart';
+import 'package:literacy_check/screens/spelling_screen.dart'; // Import the new screen
 import 'package:shared_preferences/shared_preferences.dart';
 import 'section_screen.dart';
 import 'results_screen.dart';
@@ -22,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'comprehension', 
     'reading', 
     'errorfind',
-    'rhyming'  // Add the new section
+    'rhyming',
+    'spelling'  // Add the new spelling section
   ];
   
   Map<String, bool> completedSections = {};
@@ -34,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'comprehension': Icons.hearing,
     'reading': Icons.menu_book,
     'errorfind': Icons.error_outline,
-    'rhyming': Icons.music_note,  // Icon for rhyming section
+    'rhyming': Icons.music_note,
+    'spelling': Icons.spellcheck,  // Icon for spelling section
   };
   
   Map<String, Color> sectionColors = {
@@ -44,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'comprehension': Colors.purple,
     'reading': Colors.teal,
     'errorfind': Colors.red,
-    'rhyming': Colors.deepPurple,  // Color for rhyming section
+    'rhyming': Colors.deepPurple,
+    'spelling': Colors.amber,  // Color for spelling section
   };
   
   Map<String, String> sectionDescriptions = {
@@ -54,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'comprehension': 'Listen and answer questions',
     'reading': 'Read paragraphs fluently',
     'errorfind': 'Find errors in sentences',
-    'rhyming': 'Identify words that rhyme',  // Description for rhyming section
+    'rhyming': 'Identify words that rhyme',
+    'spelling': 'Spell words you hear',  // Description for spelling section
   };
 
   @override
@@ -134,11 +139,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ).then((_) => _loadPreferences());
         break;
-      case 'rhyming':  // Handle the new rhyming section
+      case 'rhyming':
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => RhymingWordsScreen(),
+          ),
+        ).then((_) => _loadPreferences());
+        break;
+      case 'spelling':  // Handle the new spelling section
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SpellingScreen(),
           ),
         ).then((_) => _loadPreferences());
         break;
