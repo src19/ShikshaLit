@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:literacy_check/screens/error_finding_screen.dart';
 import 'package:literacy_check/screens/paragraph_reading_screen.dart';
+import 'package:literacy_check/screens/rhyming_words_screen.dart'; // Import the new screen
 import 'package:shared_preferences/shared_preferences.dart';
 import 'section_screen.dart';
 import 'results_screen.dart';
 import '../utils/string_extensions.dart';
-import 'listening_comprehension_screen.dart'; // Import the new screen
+import 'listening_comprehension_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,33 +15,46 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late SharedPreferences prefs;
-  List<String> sections = ['alphabets', 'words', 'sentences', 'comprehension', 'reading', 'errorfind'];
+  List<String> sections = [
+    'alphabets', 
+    'words', 
+    'sentences', 
+    'comprehension', 
+    'reading', 
+    'errorfind',
+    'rhyming'  // Add the new section
+  ];
+  
   Map<String, bool> completedSections = {};
+  
   Map<String, IconData> sectionIcons = {
-  'alphabets': Icons.sort_by_alpha,
-  'words': Icons.text_fields,
-  'sentences': Icons.short_text,
-  'comprehension': Icons.hearing,
-  'reading': Icons.menu_book,
-  'errorfind': Icons.error_outline,
+    'alphabets': Icons.sort_by_alpha,
+    'words': Icons.text_fields,
+    'sentences': Icons.short_text,
+    'comprehension': Icons.hearing,
+    'reading': Icons.menu_book,
+    'errorfind': Icons.error_outline,
+    'rhyming': Icons.music_note,  // Icon for rhyming section
   };
   
   Map<String, Color> sectionColors = {
-  'alphabets': Colors.blue,
-  'words': Colors.green,
-  'sentences': Colors.orange,
-  'comprehension': Colors.purple,
-  'reading': Colors.teal,            // New color for paragraph reading
-  'errorfind': Colors.red,           // New color for error finding
+    'alphabets': Colors.blue,
+    'words': Colors.green,
+    'sentences': Colors.orange,
+    'comprehension': Colors.purple,
+    'reading': Colors.teal,
+    'errorfind': Colors.red,
+    'rhyming': Colors.deepPurple,  // Color for rhyming section
   };
   
   Map<String, String> sectionDescriptions = {
-  'alphabets': 'Practice letter identification',
-  'words': 'Read simple words aloud',
-  'sentences': 'Read complete sentences',
-  'comprehension': 'Listen and answer questions',
-  'reading': 'Read paragraphs fluently',  // New description
-  'errorfind': 'Find errors in sentences', // New description
+    'alphabets': 'Practice letter identification',
+    'words': 'Read simple words aloud',
+    'sentences': 'Read complete sentences',
+    'comprehension': 'Listen and answer questions',
+    'reading': 'Read paragraphs fluently',
+    'errorfind': 'Find errors in sentences',
+    'rhyming': 'Identify words that rhyme',  // Description for rhyming section
   };
 
   @override
@@ -95,37 +109,46 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateToSection(String section) {
-    if (section == 'comprehension') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListeningComprehensionScreen(),
-        ),
-      ).then((_) => _loadPreferences());
-    } 
-    else if (section == 'reading') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ParagraphReadingScreen(),
-        ),
-      ).then((_) => _loadPreferences());
-    } 
-    else if (section == 'errorfind') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ErrorFindingScreen(),
-        ),
-      ).then((_) => _loadPreferences());
-    } 
-    else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SectionScreen(section: section),
-        ),
-      ).then((_) => _loadPreferences());
+    switch (section) {
+      case 'comprehension':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListeningComprehensionScreen(),
+          ),
+        ).then((_) => _loadPreferences());
+        break;
+      case 'reading':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ParagraphReadingScreen(),
+          ),
+        ).then((_) => _loadPreferences());
+        break;
+      case 'errorfind':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ErrorFindingScreen(),
+          ),
+        ).then((_) => _loadPreferences());
+        break;
+      case 'rhyming':  // Handle the new rhyming section
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RhymingWordsScreen(),
+          ),
+        ).then((_) => _loadPreferences());
+        break;
+      default:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SectionScreen(section: section),
+          ),
+        ).then((_) => _loadPreferences());
     }
   }
 
